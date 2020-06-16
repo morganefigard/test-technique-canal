@@ -19,8 +19,8 @@ export default class MoviePage extends Component {
   buildRequestUrl = () => {
     let url = 
       this.props.match.params.page ?
-      "https://api.themoviedb.org/3/discover/movie?api_key=92b418e837b833be308bbfb1fb2aca1e&language=en-US&sort_by=title.asc&vote_count.gte=2000&page=" + this.props.match.params.page
-      : "https://api.themoviedb.org/3/discover/movie?api_key=92b418e837b833be308bbfb1fb2aca1e&language=en-US&sort_by=title.asc&vote_count.gte=2000&page=1"
+      "https://api.themoviedb.org/3/discover/movie?api_key=92b418e837b833be308bbfb1fb2aca1e&language=en-US&sort_by=title.asc&vote_count.gte=2000&include_adult=false&page=" + this.props.match.params.page
+      : "https://api.themoviedb.org/3/discover/movie?api_key=92b418e837b833be308bbfb1fb2aca1e&language=en-US&sort_by=title.asc&vote_count.gte=2000&include_adult=false&page=1"
 
       return url;
   }

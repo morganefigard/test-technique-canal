@@ -1,6 +1,7 @@
 import './MovieSearch.css';
 import React, { Component } from 'react';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import SearchResults from '../../components/SearchResults/SearchResults';
 
 export default class MovieSearch extends Component {
   constructor() {
@@ -21,11 +22,9 @@ export default class MovieSearch extends Component {
         <SearchBar 
           setSearchResults={this.setSearchResults}
         />
-        <ul>
-          {this.state.searchResults.map(movie => (
-          <li key={movie.id}>{movie.title}</li>
-          ))}
-        </ul>
+        <SearchResults 
+          results={this.state.searchResults}
+        />
       </div>
     )
   }

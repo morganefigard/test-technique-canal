@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import axios from 'axios';
+import { Form, FormGroup, Input } from 'reactstrap';
 
 export default class SearchBar extends Component {
   constructor() {
@@ -50,13 +51,19 @@ export default class SearchBar extends Component {
       this.subscription.unsubscribe();
     }
   }
-  
+
   render() {
     return (
-      <div>
-        <input type="text" name="search" placeholder="Search..."
-   onChange={this.onSearch} />
-      </div>
+      <Form>
+        <FormGroup>
+          <Input 
+            type="text"
+            name="search"
+            placeholder="Search for a movie..."
+            onChange={this.onSearch}  
+          />
+        </FormGroup>
+      </Form>
     )
   }
 }

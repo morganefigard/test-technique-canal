@@ -7,8 +7,9 @@ export default class Routes extends Component {
   render() {
     return (
       <Switch>
-        <Route path="/" exact component={MoviePage} />
-        <Route path="/movies" exact component={MoviePage} />
+        <Route exact path="/" component={MoviePage} />
+        <Route exact path="/movies" component={MoviePage} />
+        <Route path="/movies/:page" component={MoviePage} />
       </Switch>
     )
   }

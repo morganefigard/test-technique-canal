@@ -20,7 +20,7 @@ export default class Preview extends Component {
           <CardBody>
             <CardTitle>{this.props.title}</CardTitle>
             <CardText>
-              <Badge>⭐ {this.props.rating}</Badge>
+              <Badge><span role="img" aria-label="star">⭐</span> {this.props.rating}</Badge>
             </CardText>
           </CardBody>
         </Card>

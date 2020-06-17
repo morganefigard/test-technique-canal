@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import MovieGrid from '../MovieGrid/MovieGrid';
 import PaginationBar from '../../components/PaginationBar/PaginationBar';
+import MovieSearch from '../MovieSearch/MovieSearch';
 import { Row, Col } from 'reactstrap';
 
 export default class MoviePage extends Component {
@@ -19,8 +20,8 @@ export default class MoviePage extends Component {
   buildRequestUrl = () => {
     let url = 
       this.props.match.params.page ?
-      "https://api.themoviedb.org/3/discover/movie?api_key=92b418e837b833be308bbfb1fb2aca1e&language=en-US&sort_by=title.asc&vote_count.gte=2000&page=" + this.props.match.params.page
-      : "https://api.themoviedb.org/3/discover/movie?api_key=92b418e837b833be308bbfb1fb2aca1e&language=en-US&sort_by=title.asc&vote_count.gte=2000&page=1"
+      "https://api.themoviedb.org/3/discover/movie?api_key=92b418e837b833be308bbfb1fb2aca1e&language=en-US&sort_by=title.asc&vote_count.gte=2000&include_adult=false&page=" + this.props.match.params.page
+      : "https://api.themoviedb.org/3/discover/movie?api_key=92b418e837b833be308bbfb1fb2aca1e&language=en-US&sort_by=title.asc&vote_count.gte=2000&include_adult=false&page=1"
 
       return url;
   }
@@ -69,6 +70,7 @@ export default class MoviePage extends Component {
     return (
       <div>
         <h1 className="text-left">Popular movies</h1>
+        <MovieSearch />
         <MovieGrid
           movies={this.state.movies}
         />

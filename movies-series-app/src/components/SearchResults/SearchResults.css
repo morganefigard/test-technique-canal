@@ -1,0 +1,13 @@
+.search-results {
+  margin-top: -1rem; /* Removes the spacing between search bar and search result */
+}
+
+.search-result-img {
+  min-width: 2.5rem;
+  max-width: 5.5rem;
+}
+
+.search-result-title {
+  font-size: larger;
+  margin-bottom: 1rem;
+}

@@ -1,3 +1,10 @@
 .pagination {
   justify-content: center !important;
 }
+
+.search-results {
+  position: absolute;
+  top: 109px;
+  width: 100%;
+  z-index: 1;
+}

@@ -10,6 +10,7 @@ export default class MovieGrid extends Component {
         {this.props.movies.map(movie => (
         <Preview 
           key={movie.id}
+          movieId={movie.id}
           title={movie.title}
           rating={movie.vote_average}
           poster={movie.poster_path}

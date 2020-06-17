@@ -8,8 +8,16 @@ import {
   Badge,
 } from 'reactstrap';
 
-
 export default class SearchResults extends Component {
+
+  getMoviePoster = (posterPath) => {
+    if (posterPath) {
+      return "http://image.tmdb.org/t/p/w92/" + posterPath;
+    } else {
+      return "https://via.placeholder.com/92x138.jpg?text=No+poster";
+    }
+  }
+
   render() {
     return (
       <ListGroup className="search-results text-left">
@@ -19,7 +27,12 @@ export default class SearchResults extends Component {
           >
             <Row>
               <Col xl="1" md="1" sm="1">
-                <img className="search-result-img" width="100%" src={"http://image.tmdb.org/t/p/w92/" + movie.poster_path} alt={movie.title}/>
+                <img 
+                  className="search-result-img"
+                  width="100%"
+                  src={this.getMoviePoster(movie.poster_path)}
+                  alt={movie.title}
+                />
               </Col>
               <Col xl="11" md="11" sm="11">
                 <Row className="search-result-title">

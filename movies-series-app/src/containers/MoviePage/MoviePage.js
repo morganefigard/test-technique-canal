@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import MovieGrid from '../MovieGrid/MovieGrid';
 import PaginationBar from '../../components/PaginationBar/PaginationBar';
+import MovieSearch from '../MovieSearch/MovieSearch';
 import { Row, Col } from 'reactstrap';
 
 export default class MoviePage extends Component {
@@ -69,6 +70,7 @@ export default class MoviePage extends Component {
     return (
       <div>
         <h1 className="text-left">Popular movies</h1>
+        <MovieSearch />
         <MovieGrid
           movies={this.state.movies}
         />

@@ -84,7 +84,7 @@ export default class MovieDetailPage extends Component {
   }
 
   componentDidMount() {      
-    axios.get(this.buildDetailUrl(8392))
+    axios.get(this.buildDetailUrl(this.props.match.params.id))
       .then(({ data }) => {
         this.setState(() => ({
           genres : this.prettifyList(data.genres),
@@ -100,7 +100,7 @@ export default class MovieDetailPage extends Component {
       })
       .catch((error) => console.log(error));
 
-    axios.get(this.buildPeopleUrl(8392))
+    axios.get(this.buildPeopleUrl(this.props.match.params.id))
       .then(({ data }) => {
         this.setState(() => ({
           cast : this.prettifyCast(data.cast),
@@ -122,7 +122,7 @@ export default class MovieDetailPage extends Component {
             alt={s.title}
           />
         </Col>
-        <Col>
+        <Col className="movie-info">
           <h1>{s.title}</h1>
           <h5>{s.releaseYear} • {s.genres.map(genre => (
               <span key={genre.id}>{genre.name} </span>

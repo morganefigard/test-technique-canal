@@ -7,6 +7,7 @@ import {
   Col,
   Badge,
 } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 export default class SearchResults extends Component {
 
@@ -32,6 +33,7 @@ export default class SearchResults extends Component {
         {this.props.results.map(movie => (
           <ListGroupItem
             key={movie.id}
+            tag={Link} to={"/movie-detail/" + movie.id}
           >
             <Row>
               <Col xl="1" md="1" sm="1">

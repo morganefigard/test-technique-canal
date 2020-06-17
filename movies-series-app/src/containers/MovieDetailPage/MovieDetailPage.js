@@ -1,6 +1,7 @@
 import './MovieDetailPage.css'
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Row, Col } from 'reactstrap';
 
 export default class MovieDetailPage extends Component {
   constructor() {
@@ -10,7 +11,6 @@ export default class MovieDetailPage extends Component {
       cast : [],
       director : "",
       genres : [],
-      originalLanguage : "",
       originalTitle : "",
       overview : "",
       posterPath : "https://via.placeholder.com/500x750.jpg?text=No+poster",
@@ -40,22 +40,58 @@ export default class MovieDetailPage extends Component {
     return url;
   }
 
+  prettifyList = (list) => {
+    for (let i=0; i<list.length; i++) {
+      if (i !== list.length - 1) {
+        list[i].name += ", ";
+      }
+    }
+
+    return list;
+  }
+
+  prettifyCast = (cast) => {
+    return this.prettifyList(cast.slice(0, 3));
+  }
+
   convertRuntime = (runtime) => {
     let hours = Math.floor(runtime / 60);
     let minutes = runtime % 60;
     return hours + "h" + minutes + "m"
   }
 
+  getReleaseYear = (releaseDate) => {
+    if (releaseDate) {
+      return releaseDate.substring(0, 4);
+    }
+    else return "";
+  }
+  
+  getMoviePoster = (posterPath) => {
+    if (posterPath) {
+      return "http://image.tmdb.org/t/p/w780" + posterPath;
+    } else {
+      return "https://via.placeholder.com/780x1170.jpg?text=No+poster";
+    }
+  }
+
+  getDirector = (crew) => {
+    return crew.find(crewMember => crewMember.job === "Director").name;
+  }
+
+  displayOriginalTitle = () => {
+    return this.state.originalTitle === this.state.title;
+  }
+
   componentDidMount() {      
-    axios.get(this.buildDetailUrl(19913))
+    axios.get(this.buildDetailUrl(8392))
       .then(({ data }) => {
         this.setState(() => ({
-          genres : data.genres,
-          originalLanguage : data.original_language,
+          genres : this.prettifyList(data.genres),
           originalTitle : data.original_title,
           overview : data.overview,
           posterPath : data.poster_path,
-          releaseYear : data.release_date.substring(0, 4),
+          releaseYear : this.getReleaseYear(data.release_date),
           runtime : this.convertRuntime(data.runtime),
           tagline : data.tagline,
           title : data.title,
@@ -64,11 +100,11 @@ export default class MovieDetailPage extends Component {
       })
       .catch((error) => console.log(error));
 
-    axios.get(this.buildPeopleUrl("19913"))
+    axios.get(this.buildPeopleUrl(8392))
       .then(({ data }) => {
         this.setState(() => ({
-          cast : data.cast.slice(0, 3),
-          director : data.crew.find(crewMember => crewMember.job === "Director").name
+          cast : this.prettifyCast(data.cast),
+          director : this.getDirector(data.crew)
         }));
       })
       .catch((error) => console.log(error));
@@ -78,23 +114,29 @@ export default class MovieDetailPage extends Component {
     const s = this.state;
 
     return (
-      <div>
-        <ul>
-          <li key="title">{s.title}</li>
-          <li key="release-year">{s.releaseYear}</li>
-          {s.genres.map(genre => (
-            <li key={genre.id}>{genre.name}</li>
-          ))}
-          <li key="runtime">{s.runtime}</li>
-          <li key="tagline">{s.tagline}</li>
-          <li key="overview">{s.overview}</li>
-          <li key="original-title">{s.originalTitle}</li>
-          <li key="director">{s.director}</li>
-          {s.cast.map(actor => (
-            <li key={actor.id}>{actor.name}</li>
-          ))}
-        </ul>
-      </div>
+      <Row>
+        <Col xl="3" lg="4" md="4" sm="4">
+          <img 
+            width="100%"
+            src={this.getMoviePoster(s.posterPath)}
+            alt={s.title}
+          />
+        </Col>
+        <Col>
+          <h1>{s.title}</h1>
+          <h5>{s.releaseYear} • {s.genres.map(genre => (
+              <span key={genre.id}>{genre.name} </span>
+            ))} • {s.runtime}</h5>
+          <p className="lead"><small><em>{s.tagline}</em></small></p>
+          <h6>Overview</h6>
+          <p>{s.overview}</p>
+          <p><strong>Directed by: </strong>{s.director}</p>
+          <p><strong>With: </strong>{s.cast.map(actor => (
+            <span key={actor.id}>{actor.name}</span>
+          ))}</p>
+          <p hidden={this.displayOriginalTitle()}><small>Original title: {s.originalTitle}</small></p>
+        </Col>
+      </Row>
     )
   }
 }

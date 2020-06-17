@@ -12,9 +12,17 @@ export default class SearchResults extends Component {
 
   getMoviePoster = (posterPath) => {
     if (posterPath) {
-      return "http://image.tmdb.org/t/p/w92/" + posterPath;
+      return "http://image.tmdb.org/t/p/w92" + posterPath;
     } else {
       return "https://via.placeholder.com/92x138.jpg?text=No+poster";
+    }
+  }
+
+  getMovieTitleWithYear = (movie) => {
+    if (movie.release_date) {
+      return movie.title + " (" + movie.release_date.substring(0, 4) + ")";
+    } else {
+      return movie.title;
     }
   }
 
@@ -36,7 +44,7 @@ export default class SearchResults extends Component {
               </Col>
               <Col xl="11" md="11" sm="11">
                 <Row className="search-result-title">
-                  <span>{movie.title + " (" + movie.release_date.substring(0, 4) + ")"}</span>
+                  <span>{this.getMovieTitleWithYear(movie)}</span>
                 </Row>
                 <Row>
                   <Badge><span role="img" aria-label="star">⭐</span> {movie.vote_average}</Badge>

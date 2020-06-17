@@ -15,7 +15,7 @@ export default class Preview extends Component {
 
   getMoviePoster = (posterPath) => {
     if (posterPath) {
-      return "http://image.tmdb.org/t/p/w500/" + posterPath;
+      return "http://image.tmdb.org/t/p/w500" + posterPath;
     } else {
       return "https://via.placeholder.com/500x750.jpg?text=No+poster";
     }

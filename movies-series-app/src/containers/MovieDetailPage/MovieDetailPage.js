@@ -2,6 +2,8 @@ import './MovieDetailPage.css'
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Row, Col } from 'reactstrap';
+import { Observable, from, Subscription, combineLatest } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 export default class MovieDetailPage extends Component {
   constructor() {
@@ -11,7 +13,8 @@ export default class MovieDetailPage extends Component {
       canalUrl : "",
       cast : [],
       director : "",
-      frenchTitleParsed : "",
+      frenchTitleProps : "",
+      frenchTitle : "",
       genres : [],
       originalTitle : "",
       overview : "",
@@ -22,6 +25,9 @@ export default class MovieDetailPage extends Component {
       title : "",
       voteAverage : 0
     }
+
+    this.allInfos$ = new Observable();
+    this.allInfosSub = new Subscription();
   }
 
   buildDetailUrl = (movieId) => {
@@ -47,6 +53,15 @@ export default class MovieDetailPage extends Component {
       "https://api.themoviedb.org/3/movie/"
       + movieId 
       + "/alternative_titles?api_key=92b418e837b833be308bbfb1fb2aca1e";
+    
+    return url;
+  }
+
+  buildSearchUrl = (title) => {
+    let url =
+      "https://hodor.canalplus.pro/api/v2/mycanal/search/mycanal_channel_discover/800c32b7f357adeac52ffd0523fb2b93/query/"
+      + title
+      + "?distmodes=[%22tvod%22,%22catchup%22,%22svod%22]&channelImageColor=white&displayNBOLogo=true";
     
     return url;
   }
@@ -94,51 +109,6 @@ export default class MovieDetailPage extends Component {
     return encodeURI(string.normalize("NFD").replace(/[\u0300-\u036f]|[\u002e]/g, "").replace(/[\u002d]|[\u0028]|[\u0029]|[\u002c]/g, " ").toLowerCase());
   }
 
-  setFrenchTitle = () => {
-    axios.get(this.buildAltTitleUrl(this.props.match.params.id))
-    .then(({ data }) => {
-      for (let i = 0; i < data.titles.length; i++) {
-        if (data.titles[i].iso_3166_1) {
-          if (data.titles[i].iso_3166_1 === "FR") {
-            this.setState(() => ({
-              frenchTitleParsed : this.parseToURI(data.titles[i].title)
-            }));
-            this.setCanalUrl(this.state.frenchTitleParsed);
-            break;
-          }
-        }
-      }
-      this.setCanalUrl(this.parseToURI(this.state.title));
-    })
-    .catch((error) => console.log(error));
-  }
-
-  setCanalUrl = (title) => {
-    let canalUrl = this.state.canalUrl;
-
-    let searchUrl =
-      "https://hodor.canalplus.pro/api/v2/mycanal/search/mycanal_channel_discover/800c32b7f357adeac52ffd0523fb2b93/query/"
-      + title
-      + "?distmodes=[%22tvod%22,%22catchup%22,%22svod%22]&channelImageColor=white&displayNBOLogo=true";
-    
-    axios.get(searchUrl).then(({data}) => {
-      if (data.contents.length !== 0) {
-        for (let i=0; i<data.contents.length; i++) {
-          if (
-            this.state.frenchTitleParsed === this.parseToURI(data.contents[i].title)
-            || this.parseToURI(this.state.title) === this.parseToURI(data.contents[i].title)
-            ) {
-            canalUrl = "https://www.canalplus.com" + data.contents[i].onClick.path;
-            this.setState(() => ({
-              canalUrl : canalUrl
-            }));
-            break;
-          }
-        }
-      }
-    }).catch((error) => console.log(error));
-  }
-
   hideOriginalTitle = () => {
     return this.state.originalTitle === this.state.title;
   }
@@ -147,32 +117,76 @@ export default class MovieDetailPage extends Component {
     return this.state.canalUrl === "";
   }
 
-  componentDidMount() {      
-    axios.get(this.buildDetailUrl(this.props.match.params.id))
-      .then(({ data }) => {
-        this.setState(() => ({
-          genres : this.prettifyList(data.genres),
-          originalTitle : data.original_title,
-          overview : data.overview,
-          posterPath : data.poster_path,
-          releaseYear : this.getReleaseYear(data.release_date),
-          runtime : this.convertRuntime(data.runtime),
-          tagline : data.tagline,
-          title : data.title,
-          voteAverage : data.vote_average
-        }));
-        this.setFrenchTitle();
-      })
-      .catch((error) => console.log(error));
+  componentDidMount() {     
+    this.allInfos$ = combineLatest(
+      from(axios.get(this.buildDetailUrl(this.props.match.params.id))),
+      from(axios.get(this.buildPeopleUrl(this.props.match.params.id))),
+      from(axios.get(this.buildAltTitleUrl(this.props.match.params.id))),
+    );
 
-    axios.get(this.buildPeopleUrl(this.props.match.params.id))
-      .then(({ data }) => {
+    this.allInfosSub = this.allInfos$
+    .pipe(
+      switchMap(([ infos, people, altTitle ]) => {
         this.setState(() => ({
-          cast : this.prettifyCast(data.cast),
-          director : this.getDirector(data.crew)
+          genres : this.prettifyList(infos.data.genres),
+          originalTitle : infos.data.original_title,
+          overview : infos.data.overview,
+          posterPath : infos.data.poster_path,
+          releaseYear : this.getReleaseYear(infos.data.release_date),
+          runtime : this.convertRuntime(infos.data.runtime),
+          tagline : infos.data.tagline,
+          title : infos.data.title,
+          voteAverage : infos.data.vote_average,
+          cast : this.prettifyCast(people.data.cast),
+          director : this.getDirector(people.data.crew),
+          frenchTitleProps : altTitle.data.titles.find(title => title.iso_3166_1 === "FR"),
         }));
+        
+        if (this.state.frenchTitleProps) {
+          this.setState(()=> ({
+            frenchTitle : this.state.frenchTitleProps.title
+          }))
+        } else {
+          this.setState(()=> ({
+            frenchTitle : "thisQueryWillGiveNoResultsForSureBetterThan404Error1234567890"
+          }))
+        }
+
+        return combineLatest(
+          from(axios.get(this.buildSearchUrl(this.state.title))),
+          from(axios.get(this.buildSearchUrl(this.state.originalTitle))),
+          from(axios.get(this.buildSearchUrl(this.state.frenchTitle))),
+        );
       })
-      .catch((error) => console.log(error));
+    )
+    .subscribe(([ hsrTitle, hsrOrigTitle, hsrFrTitle ]) => {
+      const searchResults = hsrTitle.data.contents.concat(hsrOrigTitle.data.contents).concat(hsrFrTitle.data.contents);
+
+      for (let i=0; i<searchResults.length; i++) {
+        if (
+          this.parseToURI(searchResults[i].title) === this.parseToURI(this.state.title)
+          || this.parseToURI(searchResults[i].title) === this.parseToURI(this.state.originalTitle)
+          || this.parseToURI(searchResults[i].title) === this.parseToURI(this.state.frenchTitle)
+          ) {
+          this.setState(() => ({
+            canalUrl : "https://www.canalplus.com" + searchResults[i].onClick.path
+          }));
+          break;
+        }
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.basicInfosSub) {
+      this.basicInfosSub.unsubscribe();
+    }
+    if (this.altTitleSub) {
+      this.altTitleSub.unsubscribe();
+    }
+    if (this.allInfosSub) {
+      this.allInfosSub.unsubscribe();
+    }
   }
 
   render() {

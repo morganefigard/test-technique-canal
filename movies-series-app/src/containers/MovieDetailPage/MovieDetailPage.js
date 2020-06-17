@@ -8,12 +8,14 @@ export default class MovieDetailPage extends Component {
     super();
 
     this.state  = {
+      canalUrl : "",
       cast : [],
       director : "",
+      frenchTitleParsed : "",
       genres : [],
       originalTitle : "",
       overview : "",
-      posterPath : "https://via.placeholder.com/500x750.jpg?text=No+poster",
+      posterPath : "",
       releaseYear : "",
       runtime : "",
       tagline : "",
@@ -36,6 +38,15 @@ export default class MovieDetailPage extends Component {
       "https://api.themoviedb.org/3/movie/"
       + movieId 
       + "/credits?api_key=92b418e837b833be308bbfb1fb2aca1e";
+    
+    return url;
+  }
+
+  buildAltTitleUrl = (movieId) => {
+    let url = 
+      "https://api.themoviedb.org/3/movie/"
+      + movieId 
+      + "/alternative_titles?api_key=92b418e837b833be308bbfb1fb2aca1e";
     
     return url;
   }
@@ -79,8 +90,61 @@ export default class MovieDetailPage extends Component {
     return crew.find(crewMember => crewMember.job === "Director").name;
   }
 
-  displayOriginalTitle = () => {
+  parseToURI = (string) => {
+    return encodeURI(string.normalize("NFD").replace(/[\u0300-\u036f]|[\u002e]/g, "").replace(/[\u002d]|[\u0028]|[\u0029]|[\u002c]/g, " ").toLowerCase());
+  }
+
+  setFrenchTitle = () => {
+    axios.get(this.buildAltTitleUrl(this.props.match.params.id))
+    .then(({ data }) => {
+      for (let i = 0; i < data.titles.length; i++) {
+        if (data.titles[i].iso_3166_1) {
+          if (data.titles[i].iso_3166_1 === "FR") {
+            this.setState(() => ({
+              frenchTitleParsed : this.parseToURI(data.titles[i].title)
+            }));
+            this.setCanalUrl(this.state.frenchTitleParsed);
+            break;
+          }
+        }
+      }
+      this.setCanalUrl(this.parseToURI(this.state.title));
+    })
+    .catch((error) => console.log(error));
+  }
+
+  setCanalUrl = (title) => {
+    let canalUrl = this.state.canalUrl;
+
+    let searchUrl =
+      "https://hodor.canalplus.pro/api/v2/mycanal/search/mycanal_channel_discover/800c32b7f357adeac52ffd0523fb2b93/query/"
+      + title
+      + "?distmodes=[%22tvod%22,%22catchup%22,%22svod%22]&channelImageColor=white&displayNBOLogo=true";
+    
+    axios.get(searchUrl).then(({data}) => {
+      if (data.contents.length !== 0) {
+        for (let i=0; i<data.contents.length; i++) {
+          if (
+            this.state.frenchTitleParsed === this.parseToURI(data.contents[i].title)
+            || this.parseToURI(this.state.title) === this.parseToURI(data.contents[i].title)
+            ) {
+            canalUrl = "https://www.canalplus.com" + data.contents[i].onClick.path;
+            this.setState(() => ({
+              canalUrl : canalUrl
+            }));
+            break;
+          }
+        }
+      }
+    }).catch((error) => console.log(error));
+  }
+
+  hideOriginalTitle = () => {
     return this.state.originalTitle === this.state.title;
+  }
+
+  hideCanalButton = () => {
+    return this.state.canalUrl === "";
   }
 
   componentDidMount() {      
@@ -97,6 +161,7 @@ export default class MovieDetailPage extends Component {
           title : data.title,
           voteAverage : data.vote_average
         }));
+        this.setFrenchTitle();
       })
       .catch((error) => console.log(error));
 
@@ -134,7 +199,12 @@ export default class MovieDetailPage extends Component {
           <p><strong>With: </strong>{s.cast.map(actor => (
             <span key={actor.id}>{actor.name}</span>
           ))}</p>
-          <p hidden={this.displayOriginalTitle()}><small>Original title: {s.originalTitle}</small></p>
+          <p hidden={this.hideOriginalTitle()}><small>Original title: {s.originalTitle}</small></p>
+          <p className="my-canal-button" hidden={this.hideCanalButton()}>
+            <a className="my-canal-link" href={this.state.canalUrl}>See on 
+              <img height="40px" src="https://static.canal-plus.net/resources/mycanal/mycanal-logo.svg"/>
+            </a>
+          </p>
         </Col>
       </Row>
     )

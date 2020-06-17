@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Row, Col } from 'reactstrap';
 import { Observable, from, Subscription, combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
 
 export default class MovieDetailPage extends Component {
   constructor() {
@@ -193,34 +194,37 @@ export default class MovieDetailPage extends Component {
     const s = this.state;
 
     return (
-      <Row>
-        <Col xl="3" lg="4" md="4" sm="4">
-          <img 
-            width="100%"
-            src={this.getMoviePoster(s.posterPath)}
-            alt={s.title}
-          />
-        </Col>
-        <Col className="movie-info">
-          <h1>{s.title}</h1>
-          <h5>{s.releaseYear} • {s.genres.map(genre => (
-              <span key={genre.id}>{genre.name} </span>
-            ))} • {s.runtime}</h5>
-          <p className="lead"><small><em>{s.tagline}</em></small></p>
-          <h6>Overview</h6>
-          <p>{s.overview}</p>
-          <p><strong>Directed by: </strong>{s.director}</p>
-          <p><strong>With: </strong>{s.cast.map(actor => (
-            <span key={actor.id}>{actor.name}</span>
-          ))}</p>
-          <p hidden={this.hideOriginalTitle()}><small>Original title: {s.originalTitle}</small></p>
-          <p className="my-canal-button" hidden={this.hideCanalButton()}>
-            <a className="my-canal-link" href={this.state.canalUrl}>See on 
-              <img height="40px" src="https://static.canal-plus.net/resources/mycanal/mycanal-logo.svg"/>
-            </a>
-          </p>
-        </Col>
-      </Row>
+      <div>
+        <NavigationBar />
+        <Row>
+          <Col xl="3" lg="4" md="4" sm="4">
+            <img 
+              width="100%"
+              src={this.getMoviePoster(s.posterPath)}
+              alt={s.title}
+            />
+          </Col>
+          <Col className="movie-info">
+            <h1>{s.title}</h1>
+            <h5>{s.releaseYear} • {s.genres.map(genre => (
+                <span key={genre.id}>{genre.name} </span>
+              ))} • {s.runtime}</h5>
+            <p className="lead"><small><em>{s.tagline}</em></small></p>
+            <h6>Overview</h6>
+            <p>{s.overview}</p>
+            <p><strong>Directed by: </strong>{s.director}</p>
+            <p><strong>With: </strong>{s.cast.map(actor => (
+              <span key={actor.id}>{actor.name}</span>
+            ))}</p>
+            <p hidden={this.hideOriginalTitle()}><small>Original title: {s.originalTitle}</small></p>
+            <p className="my-canal-button" hidden={this.hideCanalButton()}>
+              <a className="my-canal-link" href={this.state.canalUrl}>See on 
+                <img height="40px" src="https://static.canal-plus.net/resources/mycanal/mycanal-logo.svg"/>
+              </a>
+            </p>
+          </Col>
+        </Row>
+      </div>
     )
   }
 }

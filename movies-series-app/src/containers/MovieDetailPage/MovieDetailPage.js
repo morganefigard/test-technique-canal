@@ -219,7 +219,7 @@ export default class MovieDetailPage extends Component {
             <p hidden={this.hideOriginalTitle()}><small>Original title: {s.originalTitle}</small></p>
             <p className="my-canal-button" hidden={this.hideCanalButton()}>
               <a className="my-canal-link" href={this.state.canalUrl}>See on 
-                <img height="40px" src="https://static.canal-plus.net/resources/mycanal/mycanal-logo.svg"/>
+                <img height="40px" src="https://static.canal-plus.net/resources/mycanal/mycanal-logo.svg" alt="myCANAL logo"/>
               </a>
             </p>
           </Col>

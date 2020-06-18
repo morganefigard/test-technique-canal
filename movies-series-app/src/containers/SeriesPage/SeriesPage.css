@@ -1,4 +1,12 @@
+.pagination {
+  justify-content: center !important;
+}
+
 .search-results {
+  position: absolute;
+  top: 109px;
+  width: 100%;
+  z-index: 1;
   margin-top: -1rem; /* Removes the spacing between search bar and search result */
 }
 

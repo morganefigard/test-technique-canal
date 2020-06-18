@@ -17,7 +17,7 @@ export default class PaginationBar extends Component {
     } else {
       return (
         <PaginationItem key={i}>
-          <PaginationLink tag={Link} to={"/movies/" + i}>
+          <PaginationLink tag={Link} to={this.props.baseLink + i}>
             {i}
           </PaginationLink>
         </PaginationItem>
@@ -53,17 +53,17 @@ export default class PaginationBar extends Component {
     return (
       <Pagination>
         <PaginationItem>
-          <PaginationLink first tag={Link} to="/movies/1" />
+          <PaginationLink first tag={Link} to={this.props.baseLink + "1"} />
         </PaginationItem>
         <PaginationItem>
-          <PaginationLink previous tag={Link} to={"/movies/" + prevPage} />
+          <PaginationLink previous tag={Link} to={this.props.baseLink + prevPage} />
         </PaginationItem>
         {this.createPagination()}
         <PaginationItem>
-          <PaginationLink next tag={Link} to={"/movies/" + nextPage} />
+          <PaginationLink next tag={Link} to={this.props.baseLink + nextPage} />
         </PaginationItem>
         <PaginationItem>
-          <PaginationLink last tag={Link} to={"/movies/" + this.props.totalPages} />
+          <PaginationLink last tag={Link} to={this.props.baseLink + this.props.totalPages} />
         </PaginationItem>
       </Pagination>
     )

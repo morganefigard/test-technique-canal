@@ -1,9 +1,9 @@
-import './MovieSearch.css';
+import './SeriesSearch.css';
 import React, { Component } from 'react';
-import MovieSearchBar from '../../components/MovieSearchBar/MovieSearchBar';
-import MovieSearchResults from '../../components/MovieSearchResults/MovieSearchResults';
+import SeriesSearchBar from '../../components/SeriesSearchBar/SeriesSearchBar';
+import SeriesSearchResults from '../../components/SeriesSearchResults/SeriesSearchResults';
 
-export default class MovieSearch extends Component {
+export default class SeriesSearch extends Component {
   constructor() {
     super();
 
@@ -11,18 +11,18 @@ export default class MovieSearch extends Component {
       searchResults : []
     }
   }
-
+  
   setSearchResults = (results) => {
     this.setState(() => ({ searchResults : results }));
   }
-  
+
   render() {
     return (
       <div>
-        <MovieSearchBar 
+        <SeriesSearchBar
           setSearchResults={this.setSearchResults}
         />
-        <MovieSearchResults 
+        <SeriesSearchResults 
           results={this.state.searchResults}
         />
       </div>

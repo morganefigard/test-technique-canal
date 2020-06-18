@@ -191,35 +191,37 @@ export default class SeriesDetailPage extends Component {
     return (
       <div>
         <NavigationBar />
-        <Row>
-          <Col xl="3" lg="4" md="4" sm="4">
-            <img 
-              width="100%"
-              src={this.getSeriesPoster(s.posterPath)}
-              alt={s.name}
-            />
-          </Col>
-          <Col className="movie-info">
-            <h1>{s.name}</h1>
-            <h5>{s.firstAirYear} • {s.genres.map(genre => (
-                <span key={genre.id}>{genre.name} </span>
-              ))} • {s.episodeRuntime}m</h5>
-            <h6>Overview</h6>
-            <p>{s.overview}</p>
-            <p><strong>Created by: </strong>{s.creators.map(creator => (
-              <span key={creator.id}>{creator.name} </span>
-            ))}</p>
-            <p><strong>Starring: </strong>{s.cast.map(actor => (
-              <span key={actor.id}>{actor.name}</span>
-            ))}</p>
-            <p hidden={this.hideOriginalName()}><small>Original name: {s.originalName}</small></p>
-            <p className="my-canal-button" hidden={this.hideCanalButton()}>
-              <a className="my-canal-link" href={this.state.canalUrl}>See on 
-                <img height="40px" src="https://static.canal-plus.net/resources/mycanal/mycanal-logo.svg" alt="myCANAL logo"/>
-              </a>
-            </p>
-          </Col>
-        </Row>
+        <div className="page detail-page">
+          <Row>
+            <Col xl="3" lg="4" md="4" sm="4">
+              <img 
+                width="100%"
+                src={this.getSeriesPoster(s.posterPath)}
+                alt={s.name}
+              />
+            </Col>
+            <Col className="movie-info">
+              <h1 className="display-3 page-title">{s.name}</h1>
+              <h5>{s.firstAirYear} • {s.genres.map(genre => (
+                  <span key={genre.id}>{genre.name} </span>
+                ))} • {s.episodeRuntime}m</h5>
+              <h6>Overview</h6>
+              <p>{s.overview}</p>
+              <p><strong>Created by: </strong>{s.creators.map(creator => (
+                <span key={creator.id}>{creator.name} </span>
+              ))}</p>
+              <p><strong>Starring: </strong>{s.cast.map(actor => (
+                <span key={actor.id}>{actor.name}</span>
+              ))}</p>
+              <p hidden={this.hideOriginalName()}><small>Original name: "{s.originalName}"</small></p>
+              <p className="my-canal-button" hidden={this.hideCanalButton()}>
+                <a className="my-canal-link" href={this.state.canalUrl}>See on 
+                  <img className="mycanal-logo" src="https://static.canal-plus.net/resources/mycanal/mycanal-logo.svg" alt="myCANAL logo"/>
+                </a>
+              </p>
+            </Col>
+          </Row>
+        </div>
       </div>
     )
   }

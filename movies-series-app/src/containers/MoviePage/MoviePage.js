@@ -71,8 +71,8 @@ export default class MoviePage extends Component {
     return (
       <div>
         <NavigationBar />
-        <div className="movie-page">
-          <h1 className="text-left display-3 movie-page-title">Popular movies</h1>
+        <div className="page">
+          <h1 className="text-left display-3 page-title">Popular movies</h1>
           <MovieSearch />
           <MovieGrid
             movies={this.state.movies}

@@ -6,6 +6,45 @@ a {
   color: inherit !important;
 } 
 
+a.my-canal-link {
+  text-decoration: none !important;
+}
+
+.page {
+  padding-left: 10vw;
+  padding-right: 10vw;
+}
+
+.page-title {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.detail-page {
+  padding-top: 4rem;
+}
+
+.my-canal-button {
+  background-color: #474747 !important;
+  border-color: #474747;
+  color: white;
+  font-weight: 400;
+  font-size: 1.25rem;
+  width: 245px;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.my-canal-button:hover {
+  background-color: #ec3655 !important;
+  border-color: #ec3655;
+  cursor: pointer;
+}
+
+.mycanal-logo {
+  height: 2.25rem;
+  padding-left: 0.5rem;
+}
 
 .pagination {
   justify-content: center !important;

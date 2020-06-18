@@ -71,20 +71,22 @@ export default class MoviePage extends Component {
     return (
       <div>
         <NavigationBar />
-        <h1 className="text-left">Popular movies</h1>
-        <MovieSearch />
-        <MovieGrid
-          movies={this.state.movies}
-        />
-        <Row>
-          <Col xl="12" lg="12" md="12" sm="12">
-            <PaginationBar
-              currentPage={this.state.currentPage}
-              totalPages={this.state.totalPages}
-              baseLink="/movies/"
-            />
-          </Col>
-        </Row>
+        <div className="page">
+          <h1 className="text-left display-3 page-title">Popular movies</h1>
+          <MovieSearch />
+          <MovieGrid
+            movies={this.state.movies}
+          />
+          <Row>
+            <Col xl="12" lg="12" md="12" sm="12">
+              <PaginationBar
+                currentPage={this.state.currentPage}
+                totalPages={this.state.totalPages}
+                baseLink="/movies/"
+              />
+            </Col>
+          </Row>
+        </div>
       </div>
     )
   }

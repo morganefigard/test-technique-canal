@@ -25,7 +25,7 @@ export default class Preview extends Component {
   render() {
     return (
       <Col xl="2" lg="3" md="3" sm="6">
-        <Card tag={Link} to={"/movie-detail/" + this.props.movieId}>
+        <Card tag={Link} to={"/" + this.props.type + "-detail/" + this.props.id}>
           <CardImg top width="100%" src={this.getMoviePoster(this.props.poster)} alt={this.props.title} />
           <CardBody>
             <CardTitle>{this.props.title}</CardTitle>

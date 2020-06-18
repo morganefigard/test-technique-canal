@@ -1,4 +1,4 @@
-import './SearchResults.css';
+import './MovieSearchResults.css';
 import React, { Component } from 'react';
 import { 
   ListGroup,
@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-export default class SearchResults extends Component {
+export default class MovieSearchResults extends Component {
 
   getMoviePoster = (posterPath) => {
     if (posterPath) {

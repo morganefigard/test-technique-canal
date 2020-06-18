@@ -1,4 +1,4 @@
-import './MovieDetailPage.css'
+import './SeriesDetailPage.css';
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Row, Col } from 'reactstrap';
@@ -6,24 +6,23 @@ import { Observable, from, Subscription, combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 
-export default class MovieDetailPage extends Component {
+export default class SeriesDetailPage extends Component {
   constructor() {
     super();
 
     this.state  = {
       canalUrl : "",
       cast : [],
-      director : "",
+      creators : [],
+      episodeRuntime : "",
+      firstAirYear : "",
       frenchTitleProps : "",
       frenchTitle : "",
       genres : [],
-      originalTitle : "",
+      name : "",
+      originalName : "",
       overview : "",
       posterPath : "",
-      releaseYear : "",
-      runtime : "",
-      tagline : "",
-      title : "",
       voteAverage : 0
     }
 
@@ -31,37 +30,37 @@ export default class MovieDetailPage extends Component {
     this.allInfosSub = new Subscription();
   }
 
-  buildDetailUrl = (movieId) => {
+  buildDetailUrl = (seriesId) => {
     let url = 
-      "https://api.themoviedb.org/3/movie/"
-      + movieId 
+      "https://api.themoviedb.org/3/tv/"
+      + seriesId 
       + "?api_key=92b418e837b833be308bbfb1fb2aca1e&language=en-US";
     
     return url;
   }
 
-  buildPeopleUrl = (movieId) => {
+  buildPeopleUrl = (seriesId) => {
     let url = 
-      "https://api.themoviedb.org/3/movie/"
-      + movieId 
+      "https://api.themoviedb.org/3/tv/"
+      + seriesId 
       + "/credits?api_key=92b418e837b833be308bbfb1fb2aca1e";
     
     return url;
   }
 
-  buildAltTitleUrl = (movieId) => {
+  buildAltTitleUrl = (seriesId) => {
     let url = 
-      "https://api.themoviedb.org/3/movie/"
-      + movieId 
+      "https://api.themoviedb.org/3/tv/"
+      + seriesId 
       + "/alternative_titles?api_key=92b418e837b833be308bbfb1fb2aca1e";
     
     return url;
   }
 
-  buildSearchUrl = (title) => {
+  buildSearchUrl = (name) => {
     let url =
       "https://hodor.canalplus.pro/api/v2/mycanal/search/mycanal_channel_discover/800c32b7f357adeac52ffd0523fb2b93/query/"
-      + title
+      + name
       + "?distmodes=[%22tvod%22,%22catchup%22,%22svod%22]&channelImageColor=white&displayNBOLogo=true";
     
     return url;
@@ -81,20 +80,27 @@ export default class MovieDetailPage extends Component {
     return this.prettifyList(cast.slice(0, 3));
   }
 
-  convertRuntime = (runtime) => {
-    let hours = Math.floor(runtime / 60);
-    let minutes = runtime % 60;
-    return hours + "h" + minutes + "m"
+  getCreator = (creators) => {
+    let creatorsNameId = [];
+
+    creators.map(creator => {
+      creatorsNameId.push({
+        "name" : creator.name,
+        "id" : creator.id
+      });
+    });
+    
+    return this.prettifyList(creatorsNameId);
   }
 
-  getReleaseYear = (releaseDate) => {
-    if (releaseDate) {
-      return releaseDate.substring(0, 4);
+  getfirstAirYear = (firstAirDate) => {
+    if (firstAirDate) {
+      return firstAirDate.substring(0, 4);
     }
     else return "";
   }
-  
-  getMoviePoster = (posterPath) => {
+   
+  getSeriesPoster = (posterPath) => {
     if (posterPath) {
       return "http://image.tmdb.org/t/p/w780" + posterPath;
     } else {
@@ -102,16 +108,12 @@ export default class MovieDetailPage extends Component {
     }
   }
 
-  getDirector = (crew) => {
-    return crew.find(crewMember => crewMember.job === "Director").name;
-  }
-
   parseToURI = (string) => {
     return encodeURI(string.normalize("NFD").replace(/[\u0300-\u036f]|[\u002e]/g, "").replace(/[\u002d]|[\u0028]|[\u0029]|[\u002c]/g, " ").toLowerCase());
   }
 
-  hideOriginalTitle = () => {
-    return this.state.originalTitle === this.state.title;
+  hideOriginalName = () => {
+    return this.state.originalName === this.state.name;
   }
 
   hideCanalButton = () => {
@@ -129,18 +131,17 @@ export default class MovieDetailPage extends Component {
     .pipe(
       switchMap(([ infos, people, altTitle ]) => {
         this.setState(() => ({
+          creators : this.getCreator(infos.data.created_by),
           genres : this.prettifyList(infos.data.genres),
-          originalTitle : infos.data.original_title,
+          originalName : infos.data.original_name,
           overview : infos.data.overview,
           posterPath : infos.data.poster_path,
-          releaseYear : this.getReleaseYear(infos.data.release_date),
-          runtime : this.convertRuntime(infos.data.runtime),
-          tagline : infos.data.tagline,
-          title : infos.data.title,
+          firstAirYear : this.getfirstAirYear(infos.data.first_air_date),
+          episodeRuntime : infos.data.episode_run_time,
+          name : infos.data.name,
           voteAverage : infos.data.vote_average,
           cast : this.prettifyCast(people.data.cast),
-          director : this.getDirector(people.data.crew),
-          frenchTitleProps : altTitle.data.titles.find(title => title.iso_3166_1 === "FR"),
+          frenchTitleProps : altTitle.data.results.find(title => title.iso_3166_1 === "FR"),
         }));
         
         if (this.state.frenchTitleProps) {
@@ -154,8 +155,8 @@ export default class MovieDetailPage extends Component {
         }
 
         return combineLatest(
-          from(axios.get(this.buildSearchUrl(this.state.title))),
-          from(axios.get(this.buildSearchUrl(this.state.originalTitle))),
+          from(axios.get(this.buildSearchUrl(this.state.name))),
+          from(axios.get(this.buildSearchUrl(this.state.originalName))),
           from(axios.get(this.buildSearchUrl(this.state.frenchTitle))),
         );
       })
@@ -165,8 +166,8 @@ export default class MovieDetailPage extends Component {
 
       for (let i=0; i<searchResults.length; i++) {
         if (
-          this.parseToURI(searchResults[i].title) === this.parseToURI(this.state.title)
-          || this.parseToURI(searchResults[i].title) === this.parseToURI(this.state.originalTitle)
+          this.parseToURI(searchResults[i].title) === this.parseToURI(this.state.name)
+          || this.parseToURI(searchResults[i].title) === this.parseToURI(this.state.originalName)
           || this.parseToURI(searchResults[i].title) === this.parseToURI(this.state.frenchTitle)
           ) {
           this.setState(() => ({
@@ -194,23 +195,24 @@ export default class MovieDetailPage extends Component {
           <Col xl="3" lg="4" md="4" sm="4">
             <img 
               width="100%"
-              src={this.getMoviePoster(s.posterPath)}
-              alt={s.title}
+              src={this.getSeriesPoster(s.posterPath)}
+              alt={s.name}
             />
           </Col>
           <Col className="movie-info">
-            <h1>{s.title}</h1>
-            <h5>{s.releaseYear} • {s.genres.map(genre => (
+            <h1>{s.name}</h1>
+            <h5>{s.firstAirYear} • {s.genres.map(genre => (
                 <span key={genre.id}>{genre.name} </span>
-              ))} • {s.runtime}</h5>
-            <p className="lead"><small><em>{s.tagline}</em></small></p>
+              ))} • {s.episodeRuntime}m</h5>
             <h6>Overview</h6>
             <p>{s.overview}</p>
-            <p><strong>Directed by: </strong>{s.director}</p>
+            <p><strong>Created by: </strong>{s.creators.map(creator => (
+              <span key={creator.id}>{creator.name} </span>
+            ))}</p>
             <p><strong>Starring: </strong>{s.cast.map(actor => (
               <span key={actor.id}>{actor.name}</span>
             ))}</p>
-            <p hidden={this.hideOriginalTitle()}><small>Original title: {s.originalTitle}</small></p>
+            <p hidden={this.hideOriginalName()}><small>Original name: {s.originalName}</small></p>
             <p className="my-canal-button" hidden={this.hideCanalButton()}>
               <a className="my-canal-link" href={this.state.canalUrl}>See on 
                 <img height="40px" src="https://static.canal-plus.net/resources/mycanal/mycanal-logo.svg" alt="myCANAL logo"/>

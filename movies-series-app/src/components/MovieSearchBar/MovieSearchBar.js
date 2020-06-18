@@ -1,11 +1,11 @@
-import './SearchBar.css';
+import './MovieSearchBar.css';
 import React, { Component } from 'react';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import axios from 'axios';
 import { Form, FormGroup, Input } from 'reactstrap';
 
-export default class SearchBar extends Component {
+export default class MovieSearchBar extends Component {
   constructor() {
     super();
 

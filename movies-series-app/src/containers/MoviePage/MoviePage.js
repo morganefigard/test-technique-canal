@@ -5,6 +5,7 @@ import MovieGrid from '../MovieGrid/MovieGrid';
 import PaginationBar from '../../components/PaginationBar/PaginationBar';
 import MovieSearch from '../MovieSearch/MovieSearch';
 import { Row, Col } from 'reactstrap';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
 
 export default class MoviePage extends Component {
   constructor() {
@@ -69,6 +70,7 @@ export default class MoviePage extends Component {
   render() {
     return (
       <div>
+        <NavigationBar />
         <h1 className="text-left">Popular movies</h1>
         <MovieSearch />
         <MovieGrid

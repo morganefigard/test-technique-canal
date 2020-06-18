@@ -5,6 +5,7 @@ import SeriesGrid from '../SeriesGrid/SeriesGrid';
 import { Row, Col } from 'reactstrap';
 import PaginationBar from '../../components/PaginationBar/PaginationBar';
 import SeriesSearch from '../SeriesSearch/SeriesSearch';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
 
 export default class SeriesPage extends Component {
   constructor() {
@@ -69,6 +70,7 @@ export default class SeriesPage extends Component {
   render() {
     return (
       <div>
+        <NavigationBar />
         <h1 className="text-left">Popular series</h1>
         <SeriesSearch />
         <SeriesGrid

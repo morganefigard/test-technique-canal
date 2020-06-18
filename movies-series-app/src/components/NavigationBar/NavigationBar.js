@@ -13,6 +13,9 @@ export default class NavigationBar extends Component {
               <NavItem>
                 <NavLink to="/movies">Movies</NavLink>
               </NavItem>
+              <NavItem>
+                <NavLink to="/series">Series</NavLink>
+              </NavItem>
             </Nav>
         </Navbar>
       </div>

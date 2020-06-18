@@ -4,7 +4,7 @@
 
 .search-results {
   position: absolute;
-  top: 109px;
+  top: 164px;
   width: 100%;
   z-index: 1;
   margin-top: -1rem; /* Removes the spacing between search bar and search result */

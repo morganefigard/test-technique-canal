@@ -1,21 +1,9 @@
-.pagination {
-  justify-content: center !important;
+.movie-page {
+  padding-left: 10vw;
+  padding-right: 10vw;
 }
 
-.search-results {
-  position: absolute;
-  top: 164px;
-  width: 100%;
-  z-index: 1;
-  margin-top: -1rem; /* Removes the spacing between search bar and search result */
-}
-
-.search-result-img {
-  min-width: 2.5rem;
-  max-width: 5.5rem;
-}
-
-.search-result-title {
-  font-size: larger;
-  margin-bottom: 1rem;
+.movie-page-title {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }

@@ -7,7 +7,7 @@ export default class NavigationBar extends Component {
   render() {
     return (
       <div>
-        <Navbar color="light" light expand="md">
+        <Navbar color="dark" light expand="md">
           <NavbarBrand tag={Link} to="/">VideoFutur</NavbarBrand>
             <Nav className="mr-auto" navbar>
               <NavItem>

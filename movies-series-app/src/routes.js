@@ -4,6 +4,7 @@ import {Component} from 'react';
 import MoviePage from './containers/MoviePage/MoviePage';
 import MovieDetailPage from './containers/MovieDetailPage/MovieDetailPage';
 import SeriesPage from './containers/SeriesPage/SeriesPage';
+import SeriesDetailPage from './containers/SeriesDetailPage/SeriesDetailPage';
 
 export default class Routes extends Component {
   render() {
@@ -15,6 +16,7 @@ export default class Routes extends Component {
         <Route path="/movie-detail/:id" component={MovieDetailPage} />
         <Route exact path="/series" component={SeriesPage} />
         <Route path="/series/:page" component={SeriesPage} />
+        <Route path="/series-detail/:id" component={SeriesDetailPage} />
       </Switch>
     )
   }

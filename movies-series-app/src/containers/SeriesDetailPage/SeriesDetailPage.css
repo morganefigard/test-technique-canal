@@ -1,0 +1,18 @@
+.series-info {
+  text-align: left;
+}
+
+.my-canal-button {
+  background-color: #474747 !important;
+  border-color: #474747;
+  color: white;
+  font-weight: 400;
+  font-size: 1.25rem;
+  width: 245px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+a.my-canal-link {
+  text-decoration: none !important;
+}

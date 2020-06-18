@@ -71,20 +71,22 @@ export default class SeriesPage extends Component {
     return (
       <div>
         <NavigationBar />
-        <h1 className="text-left">Popular series</h1>
-        <SeriesSearch />
-        <SeriesGrid
-          series={this.state.series}
-        />
-        <Row>
-          <Col xl="12" lg="12" md="12" sm="12">
-            <PaginationBar
-              currentPage={this.state.currentPage}
-              totalPages={this.state.totalPages}
-              baseLink="/series/"
-            />
-          </Col>
-        </Row>
+        <div className="page">
+          <h1 className="text-left display-3 page-title">Popular series</h1>
+          <SeriesSearch />
+          <SeriesGrid
+            series={this.state.series}
+          />
+          <Row>
+            <Col xl="12" lg="12" md="12" sm="12">
+              <PaginationBar
+                currentPage={this.state.currentPage}
+                totalPages={this.state.totalPages}
+                baseLink="/series/"
+              />
+            </Col>
+          </Row>
+        </div>
       </div>
     )
   }

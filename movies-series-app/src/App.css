@@ -52,7 +52,7 @@ a.my-canal-link {
 
 .search-results {
   position: absolute;
-  top: 219px;
+  top: 236px;
   width: calc(80vw - 1rem);
   z-index: 1;
   color: #343a40;

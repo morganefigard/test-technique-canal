@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
   return { 
-    currentPage: state.moviePage.currentPage,
-    totalPages: state.moviePage.totalPages,
+    currentPage: state.app.currentPage,
+    totalPages: state.app.totalPages,
     basePath: state.app.basePath
   };
 }

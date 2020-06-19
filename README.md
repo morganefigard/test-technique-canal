@@ -22,13 +22,13 @@ npm start
 ### Choix techniques
 - React 16.13 : la version que je connais et que je maîtrise
 - RxJS : une technologie que j'aime beaucoup et que je trouve parfaite pour du contenu asynchrone
+- Redux : le state management sur lequel est basé NgRx, que je maîtrise
 - Reactstrap (Bootstrap) : la librairie que je connais le mieux pour faire du responsive
 
 ### Améliorations souhaitées
-- Passer sur React 16.8 et se former pour pouvoir utiliser les nouveaux hooks : useState, useEffect
 - Refondre le projet en TypeScript : je connais le langage mais uniquement dans le contexte Angular, j'aimerais prendre du temps pour me former et apprendre à utiliser le Typescript en React
-- Utiliser Redux pour tout le state management : je connais NgRx donc je pense pouvoir prendre en main Redux rapidement
 - Utiliser des observables pour toutes les requètes pour avoir un chargement des données complètement asynchrone
+- Se former pour pouvoir utiliser les nouveaux hooks : useState, useEffect
 - Utiliser des constantes pour certaines valeurs, comme l'api key ou l'URL de base de l'API : j'ai essayé de les mettres dans un fichier ou en attribut de la classe mais sans succès
 - Utiliser des alias pour les imports des composants et containers : j'ai trouvé un moyen sur internet mais il nécessitait d'utiliser la commande "npm run eject" et ça m'a fait peur, je préfère investiguer avant d'essayer
 - Faire un Makefile pour l'installation du projet
@@ -37,4 +37,4 @@ npm start
 ### Autres infos
 - Le design de mon application est inspiré du site themoviedb.com
 
-J'espère que l'application vous plaira !
+J'espère que l'application vous plaira, je me suis beaucoup amusée en la faisant !

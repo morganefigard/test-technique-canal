@@ -1,12 +1,20 @@
 import './PaginationBar.css';
-import React, { Component } from 'react';
+import React from 'react';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-export default class PaginationBar extends Component {
+const mapStateToProps = (state) => {
+  return { 
+    currentPage: state.app.currentPage,
+    totalPages: state.app.totalPages,
+    basePath: state.app.basePath
+  };
+}
 
-  addPaginationItem = (i) => {
-    if (i === this.props.currentPage) {
+const ConnectPaginationBar = ({ currentPage, basePath, totalPages }) => {
+  const addPaginationItem = (i) => {
+    if (i === currentPage) {
       return (
         <PaginationItem active key={i}>
           <PaginationLink>
@@ -17,7 +25,7 @@ export default class PaginationBar extends Component {
     } else {
       return (
         <PaginationItem key={i}>
-          <PaginationLink tag={Link} to={this.props.baseLink + i}>
+          <PaginationLink tag={Link} to={basePath + i}>
             {i}
           </PaginationLink>
         </PaginationItem>
@@ -25,47 +33,49 @@ export default class PaginationBar extends Component {
     }
   }
 
-  createPagination = () => {
+  const createPagination = () => {
     let paginationItems = [];
 
-    if (this.props.currentPage === 1 || this.props.currentPage === 2) {
+    if (currentPage === 1 || currentPage === 2) {
       for (let i=1; i<6; i++) {
-        paginationItems.push(this.addPaginationItem(i));
+        paginationItems.push(addPaginationItem(i));
       }
     }
-    else if (this.props.currentPage === this.props.totalPages || this.props.currentPage === this.props.totalPages - 1) {
-      for (let i=this.props.totalPages - 4; i<this.props.totalPages + 1; i++) {
-        paginationItems.push(this.addPaginationItem(i));
+    else if (currentPage === totalPages || currentPage === totalPages - 1) {
+      for (let i=totalPages - 4; i<totalPages + 1; i++) {
+        paginationItems.push(addPaginationItem(i));
       }
     } else {
-      for (let i=this.props.currentPage - 2; i<this.props.currentPage + 3; i++) {
-        paginationItems.push(this.addPaginationItem(i));
+      for (let i=currentPage - 2; i<currentPage + 3; i++) {
+        paginationItems.push(addPaginationItem(i));
       }
     }
 
     return paginationItems;
   }
 
-  render() {
-    let prevPage = this.props.currentPage !== 1 ? this.props.currentPage - 1 : 1; 
-    let nextPage = this.props.currentPage !== this.props.totalPages ? this.props.currentPage + 1 : this.props.totalPages; 
+  const prevPage = currentPage !== 1 ? currentPage - 1 : 1; 
+  const nextPage = currentPage !== totalPages ? currentPage + 1 : totalPages; 
 
-    return (
-      <Pagination>
-        <PaginationItem>
-          <PaginationLink first tag={Link} to={this.props.baseLink + "1"} />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink previous tag={Link} to={this.props.baseLink + prevPage} />
-        </PaginationItem>
-        {this.createPagination()}
-        <PaginationItem>
-          <PaginationLink next tag={Link} to={this.props.baseLink + nextPage} />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink last tag={Link} to={this.props.baseLink + this.props.totalPages} />
-        </PaginationItem>
-      </Pagination>
-    )
-  }
+  return (
+    <Pagination>
+      <PaginationItem>
+        <PaginationLink first tag={Link} to={basePath + "1"} />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLink previous tag={Link} to={basePath + prevPage} />
+      </PaginationItem>
+      {createPagination()}
+      <PaginationItem>
+        <PaginationLink next tag={Link} to={basePath + nextPage} />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLink last tag={Link} to={basePath + totalPages} />
+      </PaginationItem>
+    </Pagination>
+  )
 }
+
+const PaginationBar = connect(mapStateToProps)(ConnectPaginationBar);
+
+export default PaginationBar;

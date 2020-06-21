@@ -1,26 +1,36 @@
 import './MovieSearchBar.css';
-import React, { Component } from 'react';
+import React, { ChangeEvent } from 'react';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import axios from 'axios';
 import { Form, FormGroup, Input } from 'reactstrap';
+import { Movie } from '../../interfaces/Movies';
 
-export default class MovieSearchBar extends Component {
-  constructor() {
-    super();
+interface MovieSearchBarProps {
+  setSearchResults: (results: Movie[]) => void
+}
 
-    this.onSearch$ = new Subject();
-    this.subscription = new Subscription();
+interface State {
+  onSearch$: Subject<string>
+}
+
+let onSearch$ = new Subject();
+let subscription = new Subscription();
+
+export default class MovieSearchBar extends React.Component<MovieSearchBarProps & any, State> {
+  constructor(props: MovieSearchBarProps) {
+    super(props);
+
     this.onSearch = this.onSearch.bind(this);
   }
 
-  onSearch = (e) => {
-    let searchTerm = e.target.value;
+  onSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    let searchTerm = event.target.value;
 
-    this.onSearch$.next(searchTerm);
+    onSearch$.next(searchTerm);
   }
 
-  buildRequestUrl = (searchTerm) => {
+  buildRequestUrl = (searchTerm: string) => {
     let url = 
       "https://api.themoviedb.org/3/search/movie?api_key=92b418e837b833be308bbfb1fb2aca1e&language=en-US&include_adult=false&query="
       + searchTerm;
@@ -29,10 +39,10 @@ export default class MovieSearchBar extends Component {
   }
 
   componentDidMount() {
-      this.subscription = this.onSearch$.pipe(
+      subscription = onSearch$.pipe(
         debounceTime(100)
       )
-      .subscribe(debouncedSearchTerm => {
+      .subscribe((debouncedSearchTerm: any) => {
         if(debouncedSearchTerm) {
           axios.get(this.buildRequestUrl(debouncedSearchTerm))
             .then(({ data }) => {
@@ -47,8 +57,8 @@ export default class MovieSearchBar extends Component {
   }
 
   componentWillUnmount() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (subscription) {
+      subscription.unsubscribe();
     }
   }
 

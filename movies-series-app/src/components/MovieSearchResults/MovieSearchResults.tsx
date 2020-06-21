@@ -1,5 +1,5 @@
 import './MovieSearchResults.css';
-import React, { Component } from 'react';
+import React from 'react';
 import { 
   ListGroup,
   ListGroupItem,
@@ -8,10 +8,16 @@ import {
   Badge,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Movie } from '../../interfaces/Movies';
 
-export default class MovieSearchResults extends Component {
 
-  getMoviePoster = (posterPath) => {
+interface MovieSearchResultsProps {
+  results: Movie[]
+}
+
+export default class MovieSearchResults extends React.Component<MovieSearchResultsProps> {
+
+  getMoviePoster = (posterPath: string) => {
     if (posterPath) {
       return "http://image.tmdb.org/t/p/w92" + posterPath;
     } else {
@@ -19,7 +25,7 @@ export default class MovieSearchResults extends Component {
     }
   }
 
-  getMovieTitleWithYear = (movie) => {
+  getMovieTitleWithYear = (movie: Movie) => {
     if (movie.release_date) {
       return movie.title + " (" + movie.release_date.substring(0, 4) + ")";
     } else {

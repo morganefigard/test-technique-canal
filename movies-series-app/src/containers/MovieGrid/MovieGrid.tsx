@@ -3,14 +3,25 @@ import React from 'react';
 import Preview from '../../components/Preview/Preview';
 import { Row } from 'reactstrap';
 import { connect } from 'react-redux';
+import { Movie } from '../../interfaces/Movies';
 
-const mapStateToProps = (state) => {
+interface MovieGridProps {
+  movies: Movie[]
+}
+
+interface State {
+  moviePage: {
+    movies: Movie[]
+  }
+}
+
+const mapStateToProps = (state: State) => {
   return { movies: state.moviePage.movies };
 };
 
-const ConnectedMovieGrid = ({ movies }) => (
+const ConnectedMovieGrid = (props: MovieGridProps) => (
   <Row>
-    {movies.map(movie => (
+    {props.movies.map(movie => (
     <Preview 
       key={movie.id}
       id={movie.id}

@@ -1,18 +1,24 @@
 import './MovieSearch.css';
-import React, { Component } from 'react';
+import React from 'react';
 import MovieSearchBar from '../../components/MovieSearchBar/MovieSearchBar';
 import MovieSearchResults from '../../components/MovieSearchResults/MovieSearchResults';
+import { Movie } from '../../interfaces/Movies';
 
-export default class MovieSearch extends Component {
-  constructor() {
-    super();
+
+interface State {
+  searchResults : Movie[]
+}
+
+export default class MovieSearch extends React.Component<any & any, State> {
+  constructor(props: any) {
+    super(props);
 
     this.state = {
       searchResults : []
     }
   }
 
-  setSearchResults = (results) => {
+  setSearchResults = (results: Movie[]) => {
     this.setState(() => ({ searchResults : results }));
   }
   

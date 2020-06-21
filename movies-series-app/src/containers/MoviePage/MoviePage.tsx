@@ -1,5 +1,6 @@
 import './MoviePage.css';
-import React, { Component } from 'react';
+import React from 'react';
+import { RouteProps } from 'react-router';
 import axios from 'axios';
 import MovieGrid from '../MovieGrid/MovieGrid';
 import PaginationBar from '../../components/PaginationBar/PaginationBar';
@@ -7,19 +8,30 @@ import MovieSearch from '../MovieSearch/MovieSearch';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import { connect } from 'react-redux';
 import { fillMovies, setCurrentPage, setTotalPages, setBasePath } from '../../store/actions';
+import { 
+  Movie,
+  MoviePageData
+} from '../../interfaces/Movies';
 
-function mapDispatchToProps(dispatch) {
+interface State {
+  movies: Movie[],
+  currentPage: number,
+  totalPages: number,
+  basePath: string
+}
+
+function mapDispatchToProps(dispatch: any) {
   return {
-    fillMovies: movies => dispatch(fillMovies(movies)),
-    setCurrentPage: page => dispatch(setCurrentPage(page)),
-    setTotalPages: pages => dispatch(setTotalPages(pages)),
-    setBasePath: path => dispatch(setBasePath(path))
+    fillMovies: (movies: Movie[]) => dispatch(fillMovies(movies)),
+    setCurrentPage: (page: number) => dispatch(setCurrentPage(page)),
+    setTotalPages: (pages: number) => dispatch(setTotalPages(pages)),
+    setBasePath: (path: string) => dispatch(setBasePath(path))
   };
 }
 
-class ConnectedMoviePage extends Component {
-  constructor() {
-    super();
+class ConnectedMoviePage extends React.Component<any & RouteProps, State> {
+  constructor(props: any) {
+    super(props);
 
     this.state = {
       movies: [],
@@ -39,7 +51,7 @@ class ConnectedMoviePage extends Component {
     return url;
   }
 
-  setStateWithData = (data) => {
+  setStateWithData = (data: MoviePageData) => {
     this.setState(() => ({
       movies : [],
       currentPage : data.page,
@@ -47,7 +59,7 @@ class ConnectedMoviePage extends Component {
     }));
 
     for (let i=0; i<data.results.length; i++) {
-      this.setState(prevState => ({
+      this.setState((prevState: State) => ({
         movies: [
           ...prevState.movies, 
           {
@@ -81,7 +93,7 @@ class ConnectedMoviePage extends Component {
       .catch((error) => console.log(error));
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: any) {
     if(this.props.match.params.page !== prevProps.match.params.page) {
       axios.get(this.buildRequestUrl())
         .then(({ data }) => {
